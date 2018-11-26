@@ -13,7 +13,8 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.tests.HostAndPortUtil;
 
 public abstract class JedisCommandTestBase {
-  protected static HostAndPort hnp = HostAndPortUtil.getRedisServers().get(0);
+//  protected static HostAndPort hnp = HostAndPortUtil.getRedisServers().get(0);
+  protected static HostAndPort hnp = new HostAndPort("192.168.110.40", 6379);
 
   protected Jedis jedis;
 
@@ -25,7 +26,7 @@ public abstract class JedisCommandTestBase {
   public void setUp() throws Exception {
     jedis = new Jedis(hnp.getHost(), hnp.getPort(), 500);
     jedis.connect();
-    jedis.auth("foobared");
+//    jedis.auth("foobared");
     jedis.flushAll();
   }
 
