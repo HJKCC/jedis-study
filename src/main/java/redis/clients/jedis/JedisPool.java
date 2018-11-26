@@ -12,6 +12,9 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import redis.clients.jedis.exceptions.JedisException;
 import redis.clients.jedis.util.JedisURIHelper;
 
+/**
+ * Jedis线程池，默认使用0号数据库
+ */
 public class JedisPool extends JedisPoolAbstract {
 
   public JedisPool() {

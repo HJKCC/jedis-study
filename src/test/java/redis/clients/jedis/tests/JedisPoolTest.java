@@ -25,15 +25,16 @@ import redis.clients.jedis.exceptions.JedisException;
 import redis.clients.jedis.exceptions.JedisExhaustedPoolException;
 
 public class JedisPoolTest {
-  private static HostAndPort hnp = HostAndPortUtil.getRedisServers().get(0);
+//  private static HostAndPort hnp = HostAndPortUtil.getRedisServers().get(0);  //获取默认host localhost 和默认port 6379
+  private static HostAndPort hnp = new HostAndPort("192.168.128.10", 6379);
 
   @Test
   public void checkConnections() {
     JedisPool pool = new JedisPool(new JedisPoolConfig(), hnp.getHost(), hnp.getPort(), 2000);
     Jedis jedis = pool.getResource();
-    jedis.auth("foobared");
     jedis.set("foo", "bar");
     assertEquals("bar", jedis.get("foo"));
+    System.out.println(jedis.get("foo"));
     jedis.close();
     pool.destroy();
     assertTrue(pool.isClosed());
@@ -43,12 +44,14 @@ public class JedisPoolTest {
   public void checkCloseableConnections() throws Exception {
     JedisPool pool = new JedisPool(new JedisPoolConfig(), hnp.getHost(), hnp.getPort(), 2000);
     Jedis jedis = pool.getResource();
-    jedis.auth("foobared");
+//    jedis.auth("foobared");
     jedis.set("foo", "bar");
     assertEquals("bar", jedis.get("foo"));
     jedis.close();
     pool.close();
     assertTrue(pool.isClosed());
+    Thread.sleep(1000L);
+    System.out.println(jedis.get("foo"));
   }
 
   @Test
@@ -125,8 +128,9 @@ public class JedisPoolTest {
 
   @Test
   public void nonDefaultDatabase() {
+    //指定0号数据库
     JedisPool pool0 = new JedisPool(new JedisPoolConfig(), hnp.getHost(), hnp.getPort(), 2000,
-        "foobared");
+            null, 0);
     Jedis jedis0 = pool0.getResource();
     jedis0.set("foo", "bar");
     assertEquals("bar", jedis0.get("foo"));
@@ -134,10 +138,12 @@ public class JedisPoolTest {
     pool0.destroy();
     assertTrue(pool0.isClosed());
 
+    //指定1号数据库
     JedisPool pool1 = new JedisPool(new JedisPoolConfig(), hnp.getHost(), hnp.getPort(), 2000,
-        "foobared", 1);
+        null, 1);
     Jedis jedis1 = pool1.getResource();
-    assertNull(jedis1.get("foo"));
+//    assertNull(jedis1.get("foo"));
+    System.out.println(jedis1.get("foo"));
     jedis1.close();
     pool1.destroy();
     assertTrue(pool1.isClosed());
@@ -146,7 +152,7 @@ public class JedisPoolTest {
   @Test
   public void startWithUrlString() {
     Jedis j = new Jedis("localhost", 6380);
-    j.auth("foobared");
+//    j.auth("foobared");
     j.select(2);
     j.set("foo", "bar");
     JedisPool pool = new JedisPool("redis://:foobared@localhost:6380/2");
