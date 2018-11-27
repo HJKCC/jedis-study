@@ -22,6 +22,10 @@ public abstract class JedisCommandTestBase {
     super();
   }
 
+  /**
+   * 建立和redis服务的tcp连接
+   * @throws Exception
+   */
   @Before
   public void setUp() throws Exception {
     jedis = new Jedis(hnp.getHost(), hnp.getPort(), 500);
@@ -30,6 +34,9 @@ public abstract class JedisCommandTestBase {
     jedis.flushAll();
   }
 
+  /**
+   * 断开和redis服务的tcp连接
+   */
   @After
   public void tearDown() {
     jedis.disconnect();
