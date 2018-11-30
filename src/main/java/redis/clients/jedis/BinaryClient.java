@@ -33,12 +33,16 @@ import redis.clients.jedis.util.SafeEncoder;
 
 public class BinaryClient extends Connection {
 
+  //isInMulti默认值为false，是否是事务
   private boolean isInMulti;
 
+  //password默认值为null
   private String password;
 
+  //db默认值为0，即0号数据库
   private int db;
 
+  //isInWatch默认值为false
   private boolean isInWatch;
 
   public BinaryClient() {
